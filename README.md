@@ -11,7 +11,7 @@
 * 웹서버 : Nginx
 * 데이터베이스 : Mysql
 * 데이터 스트럭처 : Redis
-* 자동배포툴 : Jinkins
+* 자동배포툴 : Jenkins
 * 버전관리 툴 : GitHub
 * 업무협업 툴 : Slack
 
