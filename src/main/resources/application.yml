@@ -1,1 +1,21 @@
+spring:
+  jpa:
+    show-sql: true
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://darecaga.cafe24.com:3306/darecaga?characterEncoding=UTF-8&serverTimezone=UTC
+    username: darecaga
+    password: aresteam!
+    jwt:
+      secret: aresteam!
+
+server:
+  port: 8080
+
 

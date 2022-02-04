@@ -12,36 +12,25 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TB_Member")
+@Table(name = "TB_Vote")
 @Entity
-public class Member {
+public class Vote {
 
     @Id
     @Column(name = "Idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "MemberId")
-    private String memberId;
+    @Column(name = "GameIdx")
+    private Long gameIdx;
 
-    @Column(name = "MemberPwd")
-    private String memberPwd;
+    @Column(name = "MemberIdx")
+    private Long memberIdx;
 
-    @Column(name = "MemberName")
-    private String memberName;
-
-    @Column(name = "Phone")
-    private String phone;
-
-    @Column(name = "Grade")
-    private Integer grade;
+    @Column(name = "IsVote")
+    private boolean isVote;
 
     @Column(name = "CreateDate")
     private Timestamp createDate;
-
-    @Transient
-    private String authToken;
-
-
 
 }
