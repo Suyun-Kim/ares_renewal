@@ -1,34 +1,31 @@
 package kr.co.ares.common;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import kr.co.ares.domain.Member;
+import io.jsonwebtoken.*;
 import kr.co.ares.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 
 import javax.annotation.PostConstruct;
+
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
+
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "bearer";
+    private static final String AUTHORITIES_KEY = "Authorization";
+    private static final String BEARER_TYPE = "BEARER";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
@@ -56,9 +53,11 @@ public class TokenProvider {
 
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        //Member userDetails = memberService.getMember(this.getUserPk(token)).get();
-        //return new UsernamePasswordAuthenticationToken(userDetails, "", .getAuthorities());
-        return null;
+        UserDetails userDetails = memberService.loadUserByUsername(this.getUserPk(token));
+
+        log.info("UserDetails ::: " + userDetails.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출
@@ -68,7 +67,13 @@ public class TokenProvider {
 
     // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN값'
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7, headerAuth.length());
+        }
+
+        return null;
     }
 
     // 토큰의 유효성 + 만료일자 확인
@@ -80,5 +85,6 @@ public class TokenProvider {
             return false;
         }
     }
+
 
 }

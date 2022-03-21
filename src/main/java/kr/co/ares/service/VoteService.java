@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,13 @@ public class VoteService {
 
     public Vote addVoteMember(VoteDTO voteDTO) {
 
+        LocalDateTime localDateTime = LocalDateTime.now();
+
         Vote vote = Vote.builder()
                 .gameIdx(voteDTO.getGameIdx())
                 .memberIdx(voteDTO.getMemberIdx())
                 .isVote(voteDTO.getIsVote())
-                .createDate(new Timestamp(System.currentTimeMillis()))
+                .createDate(Timestamp.valueOf(localDateTime))
                 .build();
 
         return voteRepository.saveAndFlush(vote);

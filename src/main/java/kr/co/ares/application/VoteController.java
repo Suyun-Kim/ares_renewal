@@ -41,4 +41,9 @@ public class VoteController {
         Vote vote = voteService.addVoteMember(voteDTO);
         return null;
     }
+
+    @GetMapping("/tests")
+    public ResponseEntity test() {
+        return null;
+    }
 }
