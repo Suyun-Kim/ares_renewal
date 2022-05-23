@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 public class VoteDTO {
 
     @NotNull(message = "게임아이디는 필수 입니다")
-    private Long gameIdx;
+    private Integer gameIdx;
 
     @NotNull(message = "게임아이디는 필수 입니다")
-    private Long memberIdx;
+    private Integer memberIdx;
 
     @NotNull(message = "투표 여부는 필수 입니다.")
     private Boolean isVote;

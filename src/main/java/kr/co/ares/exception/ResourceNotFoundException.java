@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @AllArgsConstructor
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "error.bad")
-public class BadRequestException extends BaseException {
+public class ResourceNotFoundException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
-    public BadRequestException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }

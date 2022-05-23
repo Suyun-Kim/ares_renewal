@@ -1,36 +1,39 @@
 package kr.co.ares.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
-@ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TB_Vote")
+@Table(name = "TB_MatchResult")
 @Entity
-public class Vote {
+public class MatchResult {
 
     @Id
     @Column(name = "Idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idx;
 
     @Column(name = "GameIdx")
     private Integer gameIdx;
 
-    @Column(name = "MemberIdx")
-    private Integer memberIdx;
+    @Column(name = "Win")
+    private String win;
 
-    @Column(name = "IsVote")
-    private boolean isVote;
+    @Column(name = "lose")
+    private String lose;
+
+    @Column(name = "WinScore")
+    private Integer winScore;
+
+    @Column(name = "LoseScore")
+    private Integer loseScore;
 
     @Column(name = "CreateDate")
     private Timestamp createDate;
-
 }

@@ -6,6 +6,9 @@ import kr.co.ares.common.StatusEnum;
 import kr.co.ares.common.TokenProvider;
 import kr.co.ares.domain.Member;
 import kr.co.ares.domain.dto.MemberDTO;
+import kr.co.ares.exception.BadRequestException;
+import kr.co.ares.exception.BaseException;
+import kr.co.ares.exception.ResourceNotFoundException;
 import kr.co.ares.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -30,24 +33,28 @@ public class MemberController {
 
 
     //로그인
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity login(@RequestBody MemberDTO memberDTO) {
 
-        Member member = memberService.getMember(memberDTO.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
+        Optional<Member> member = memberService.getMember(memberDTO.getMemberId());
 
-        if (!memberDTO.getMemberPwd().equals(member.getMemberPwd())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        if(!member.isPresent()) {
+            throw new ResourceNotFoundException("존재 하지 않는 회원입니다.");
         }
 
-        member = Member.builder()
-                .grade(member.getGrade())
-                .authToken(tokenProvider.createToken(member.getMemberId()))
+        if (!memberDTO.getMemberPwd().equals(member.get().getMemberPwd())) {
+            throw new BadRequestException("잘못된 비밀번호입니다.");
+        }
+
+        Member authMember = Member.builder()
+                .grade(member.get().getGrade())
+                .memberName(member.get().getMemberName())
+                .authToken(tokenProvider.createToken(member.get().getMemberId()))
             .build();
 
         UserDetails userDetails = memberService.loadUserByUsername(memberDTO.getMemberId());
 
-        return new ResponseEntity(new Response<>(StatusEnum.OK, true, member), HttpStatus.OK);
+        return new ResponseEntity(new Response<>(StatusEnum.OK, true, authMember), HttpStatus.OK);
     }
 
     //회원정보 조회(일반 사용자용)
