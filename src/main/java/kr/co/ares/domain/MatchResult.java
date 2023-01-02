@@ -36,4 +36,8 @@ public class MatchResult {
 
     @Column(name = "CreateDate")
     private Timestamp createDate;
+
+    @OneToOne
+    @JoinColumn(name = "gameIdx")
+    private Game game;
 }

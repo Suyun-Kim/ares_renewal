@@ -21,7 +21,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.validation.Valid;
 
 @Log4j2
-@EnableWebMvc
 @RestController
 @RequiredArgsConstructor
 public class VoteController {
@@ -37,13 +36,10 @@ public class VoteController {
     }
 
     @PostMapping("/votes")
-    public ResponseEntity addVoteMember(@RequestBody @Valid VoteDTO voteDTO, BindingResult bindingResult) {
+    public ResponseEntity addVoteMember(@RequestBody @Valid VoteDTO voteDTO) {
         Vote vote = voteService.addVoteMember(voteDTO);
-        return null;
+
+        return new ResponseEntity(new Response<>(StatusEnum.OK, true, vote), HttpStatus.OK);
     }
 
-    @GetMapping("/tests")
-    public ResponseEntity test() {
-        return null;
-    }
 }

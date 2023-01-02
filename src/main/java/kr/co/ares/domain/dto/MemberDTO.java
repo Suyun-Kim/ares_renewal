@@ -3,6 +3,7 @@ package kr.co.ares.domain.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 @ToString
+@Slf4j
 public class MemberDTO implements UserDetails {
 
     private String memberId;

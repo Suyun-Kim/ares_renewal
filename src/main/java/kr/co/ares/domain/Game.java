@@ -6,9 +6,11 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,11 +50,26 @@ public class Game {
     @Column(name = "CreateDate")
     private Timestamp createDate;
 
+    @Column(name = "IsEnd")
+    private Boolean isEnd;
+
     @Transient
     private Integer voteCount = 0;
 
     @Transient
     private Integer notVoteCount = 0;
+
+    @Transient
+    private Integer noVoteCount = 0;
+
+    @Transient
+    private List<Member> voteMembers;
+
+    @Transient
+    private List<Member> notVoteMembers;
+
+    @Transient
+    private List<Member> noVoteMembers;
 
 
 

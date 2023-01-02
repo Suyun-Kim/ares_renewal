@@ -16,4 +16,9 @@ public class GameService {
     public Game getGameLast () {
         return gameRepository.findFirstByOrderByIdxDesc();
     }
+
+    public Game getVotedGameInfo (boolean isEnd) {
+        return gameRepository.findFirstByIsEndOrderByIdxDesc(isEnd);
+    }
+
 }

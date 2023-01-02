@@ -16,6 +16,7 @@ public class MatchResultService {
     private final MatchResultRepository matchResultRepository;
 
     public List<MatchResult> getListMatchTop3 () {
+
         return matchResultRepository.findTop3ByOrderByIdxDesc();
     }
 }

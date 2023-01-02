@@ -6,10 +6,7 @@ import kr.co.ares.domain.Game;
 import kr.co.ares.domain.MatchResult;
 import kr.co.ares.domain.Notice;
 import kr.co.ares.domain.Vote;
-import kr.co.ares.service.GameService;
-import kr.co.ares.service.MatchResultService;
-import kr.co.ares.service.NoticeService;
-import kr.co.ares.service.VoteService;
+import kr.co.ares.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DashBoardController {
 
+    private final MemberService memberService;
     private final GameService gameService;
     private final VoteService voteService;
     private final NoticeService noticeService;
@@ -34,7 +32,9 @@ public class DashBoardController {
 
         int voteCount = 0;
         int notVoteCount = 0;
+        int noVoteCount = 0;
 
+        int memberCount = memberService.getAllMember().size();
         Game game = gameService.getGameLast();
         List<Vote> votes = voteService.getVoteByGameId(game.getIdx());
         for (Vote vote : votes) {
@@ -45,8 +45,11 @@ public class DashBoardController {
             }
         }
 
+        noVoteCount = memberCount - ( voteCount + notVoteCount );
+
         game.setVoteCount(voteCount);
         game.setNotVoteCount(notVoteCount);
+        game.setNoVoteCount(noVoteCount);
 
         return new ResponseEntity(new Response<>(StatusEnum.OK, true, game), HttpStatus.OK);
 

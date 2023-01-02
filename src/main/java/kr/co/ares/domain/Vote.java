@@ -33,4 +33,8 @@ public class Vote {
     @Column(name = "CreateDate")
     private Timestamp createDate;
 
+    @OneToOne
+    @JoinColumn(name = "memberIdx", insertable = false, updatable = false)
+    private Member member;
+
 }

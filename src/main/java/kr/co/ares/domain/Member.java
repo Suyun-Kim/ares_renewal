@@ -2,9 +2,13 @@ package kr.co.ares.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -36,12 +40,15 @@ public class Member {
     @Column(name = "Grade")
     private Integer grade;
 
+    @Column(name = "Team")
+    private String team;
+
     @Column(name = "CreateDate")
     private Timestamp createDate;
 
     @Transient
     private String authToken;
 
-
-
+    @Transient
+    private Set<GrantedAuthority> authorities;
 }

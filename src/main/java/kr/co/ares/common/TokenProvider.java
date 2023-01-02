@@ -24,9 +24,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final String AUTHORITIES_KEY = "Authorization";
-    private static final String BEARER_TYPE = "BEARER";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
     String secretKey = "aresteam!";
@@ -55,9 +52,8 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = memberService.loadUserByUsername(this.getUserPk(token));
 
-        log.info("UserDetails ::: " + userDetails.getAuthorities());
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+
     }
 
     // 토큰에서 회원 정보 추출

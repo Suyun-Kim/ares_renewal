@@ -25,6 +25,14 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
+    public List<Member> getAllMember () {
+        return memberRepository.findAll();
+    }
+
+    public List<Member> getAllVoteMember() {
+        return memberRepository.findAllByGradeNot(9);
+    }
+
     public Optional<Member> getMember (String memberId) {
         return memberRepository.findByMemberId(memberId);
     }
@@ -42,12 +50,17 @@ public class MemberService implements UserDetailsService {
             switch (member.getGrade()) {
                 case 1 :
                     authorities.add(new SimpleGrantedAuthority("USER"));
+                    break;
                 case 2 :
-                    authorities.add(new SimpleGrantedAuthority("MANAGER"));
                 case 3 :
                     authorities.add(new SimpleGrantedAuthority("MANAGER"));
-                default:
+                    break;
+                case 4 :
                     authorities.add(new SimpleGrantedAuthority("ADMIN"));
+                    break;
+                case 9 :
+                    authorities.add(new SimpleGrantedAuthority("OTHER"));
+                    break;
             }
 
         }
