@@ -12,9 +12,9 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TB_Vote")
+@Table(name = "TB_NotVote")
 @Entity
-public class Vote {
+public class NotVote {
 
     @Id
     @Column(name = "Idx")

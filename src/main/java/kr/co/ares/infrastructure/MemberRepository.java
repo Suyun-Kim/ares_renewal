@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     Optional<Member> findByMemberId(String memberId);
-    List<Member> findAllByGradeNot(Integer grade);
+    List<Member> findAllByGradeIsNot(Integer grade);
 }

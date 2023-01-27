@@ -6,6 +6,9 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,7 +22,20 @@ spring:
       pageable:
         one-indexed-parameters: true
 
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
 server:
   port: 8081
 
 
+weather:
+  apiURL: http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst
+  authKey: opn6jQE3EkqPya9gBAzCbJPxo4Cs%2BmM97zX%2Bwa9kyfsd4S46mqyyTt%2BYvIyVKDubvKubY9e6pG92wc%2FBX8BsuA%3D%3D
+  posx: 127
+  poxy: 37

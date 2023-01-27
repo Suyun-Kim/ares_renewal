@@ -30,7 +30,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public List<Member> getAllVoteMember() {
-        return memberRepository.findAllByGradeNot(9);
+        return memberRepository.findAllByGradeIsNot(9);
     }
 
     public Optional<Member> getMember (String memberId) {

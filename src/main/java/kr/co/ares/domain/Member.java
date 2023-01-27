@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+@Setter
 @Getter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)

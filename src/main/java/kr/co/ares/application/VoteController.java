@@ -4,6 +4,7 @@ import kr.co.ares.common.Response;
 import kr.co.ares.common.StatusEnum;
 import kr.co.ares.domain.Vote;
 import kr.co.ares.domain.dto.VoteDTO;
+import kr.co.ares.exception.BadRequestException;
 import kr.co.ares.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,10 +37,21 @@ public class VoteController {
     }
 
     @PostMapping("/votes")
-    public ResponseEntity addVoteMember(@RequestBody @Valid VoteDTO voteDTO) {
-        Vote vote = voteService.addVoteMember(voteDTO);
+    public ResponseEntity<?> addVoteMember(@RequestBody @Valid VoteDTO voteDTO) {
 
-        return new ResponseEntity(new Response<>(StatusEnum.OK, true, vote), HttpStatus.OK);
+        Integer result;
+
+        if (voteDTO.getIsVote()) {
+            result = voteService.addVoteMember(voteDTO);
+        } else {
+            result = voteService.addNotVoteMember(voteDTO);
+        }
+
+        if (result == 20) {
+            throw new BadRequestException("이미 투표를 완료 했습니다.");
+        }
+
+        return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
     }
 
 }

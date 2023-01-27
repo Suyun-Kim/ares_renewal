@@ -4,7 +4,10 @@ import kr.co.ares.common.Response;
 import kr.co.ares.common.StatusEnum;
 import kr.co.ares.domain.Game;
 import kr.co.ares.domain.Member;
+import kr.co.ares.domain.NotVote;
 import kr.co.ares.domain.Vote;
+import kr.co.ares.domain.dto.GameDTO;
+import kr.co.ares.exception.ResourceNotFoundException;
 import kr.co.ares.service.GameService;
 import kr.co.ares.service.MemberService;
 import kr.co.ares.service.VoteService;
@@ -12,60 +15,97 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
 @RequiredArgsConstructor
 public class GameController {
 
-    private final MemberService memberService;
     private final GameService gameService;
     private final VoteService voteService;
+    private final MemberService memberService;
 
-    @GetMapping(value = "/games", produces = "application/json")
-    public ResponseEntity selectVotedGameInfo() {
+    @GetMapping(value = "/games:voting", produces = "application/json")
+    public ResponseEntity<?> selectVotedGameInfo() {
 
-        int voteCount = 0;
-        int notVoteCount = 0;
-        int noVoteCount = 0;
+        Game result = gameService.getGameLast();
 
-        Game game = gameService.getVotedGameInfo(false);
-        List<Vote> votes = voteService.getVoteByGameId(game.getIdx());
-        List<Member> members = memberService.getAllVoteMember();
+        return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
+    }
 
-        List<Member> voteMembers = new ArrayList<>();
-        List<Member> notVoteMembers = new ArrayList<>();
+    @GetMapping(value = "/games/{gameIdx}", produces = "application/json")
+    public ResponseEntity<?> selectGameInfo(@PathVariable Integer gameIdx) {
+        Map<String, Object> result = new HashMap<>();
 
-        for (Vote vote : votes) {
-            if (vote.isVote()) {
-                voteCount++;
-                voteMembers.add(vote.getMember());
-                members.remove(vote.getMember());
+        List<Member> memberList = memberService.getAllVoteMember();
+        Optional<Game> gameInfo = gameService.getGameByIdx(gameIdx);
+        List<Member> team1VoteList = new ArrayList<>();
+        List<Member> team2VoteList = new ArrayList<>();
+        List<Member> team1NotVoteList = new ArrayList<>();
+        List<Member> team2NotVoteList = new ArrayList<>();
+        List<Member> team1NoVoteList = new ArrayList<>();
+        List<Member> team2NoVoteList = new ArrayList<>();
+
+        if (!gameInfo.isPresent()) {
+            throw new ResourceNotFoundException("해당 경기가 존재 하지 않습니다.");
+        }
+
+        List<Vote> voteList = voteService.getVoteByGameId(gameIdx);
+        List<NotVote> notVoteList = voteService.getNotVoteByGameId(gameIdx);
+
+
+        for (Vote vote : voteList) {
+            String team = vote.getMember().getTeam();
+            if (team.equals("R")) {
+                team1VoteList.add(vote.getMember());
             } else {
-                notVoteCount++;
-                notVoteMembers.add(vote.getMember());
-                members.remove(vote.getMember());
+                team2VoteList.add(vote.getMember());
             }
         }
 
-        noVoteCount = members.size() - (voteCount + notVoteCount);
+        for (NotVote notVote : notVoteList) {
+            String team = notVote.getMember().getTeam();
+            if (team.equals("R")) {
+                team1NotVoteList.add(notVote.getMember());
+            } else {
+                team2NotVoteList.add(notVote.getMember());
+            }
+        }
 
-        game.setVoteCount(voteCount);
-        game.setNotVoteCount(notVoteCount);
-        game.setNoVoteCount(noVoteCount);
-        game.setVoteMembers(voteMembers);
-        game.setNotVoteMembers(notVoteMembers);
-        game.setNoVoteMembers(members);
+        memberList.removeAll(team1VoteList);
+        memberList.removeAll(team2VoteList);
+        memberList.removeAll(team1NotVoteList);
+        memberList.removeAll(team2NotVoteList);
 
 
-        return new ResponseEntity(new Response<>(StatusEnum.OK, true, game), HttpStatus.OK);
+        for (Member member : memberList) {
+            String team = member.getTeam();
+
+            if (team.equals("R")) {
+                team1NoVoteList.add(member);
+            } else {
+                team2NoVoteList.add(member);
+            }
+        }
+
+
+        result.put("gameInfo", gameInfo);
+        result.put("vote", voteList);
+        result.put("notVote", notVoteList);
+        result.put("team1VoteList", team1VoteList);
+        result.put("team2VoteList", team2VoteList);
+        result.put("team1NotVoteList", team1NotVoteList);
+        result.put("team2NotVoteList", team2NotVoteList);
+        result.put("team1NoVoteList", team1NoVoteList);
+        result.put("team2NoVoteList", team2NoVoteList);
+
+
+        return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
+
     }
 
 

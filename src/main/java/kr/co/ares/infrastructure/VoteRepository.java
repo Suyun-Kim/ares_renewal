@@ -15,7 +15,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Override
     Page<Vote> findAll(Pageable pageable);
     List<Vote> findByGameIdx (Integer gameId);
-    List<Vote> findByGameIdxAndIsVote(Integer gameId, boolean isVote);
     Optional<Vote> findByGameIdxAndMemberIdx(Integer gameId, Integer memberIdx);
 
 }
