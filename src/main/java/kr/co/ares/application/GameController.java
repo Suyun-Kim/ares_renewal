@@ -6,6 +6,7 @@ import kr.co.ares.domain.Game;
 import kr.co.ares.domain.Member;
 import kr.co.ares.domain.NotVote;
 import kr.co.ares.domain.Vote;
+import kr.co.ares.domain.dto.CheckInDTO;
 import kr.co.ares.domain.dto.GameDTO;
 import kr.co.ares.exception.ResourceNotFoundException;
 import kr.co.ares.service.GameService;
@@ -13,6 +14,7 @@ import kr.co.ares.service.MemberService;
 import kr.co.ares.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Log4j2
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class GameController {
@@ -106,6 +108,12 @@ public class GameController {
 
         return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
 
+    }
+
+    @GetMapping(value = "/games:distance/{gameIdx}", produces = "application/json")
+    public ResponseEntity<?> selectLastGameDistance(@PathVariable Integer gameIdx, CheckInDTO req) {
+        Double result = gameService.getGameDistance(gameIdx, req);
+        return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
     }
 
 

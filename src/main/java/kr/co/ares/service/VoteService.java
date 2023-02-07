@@ -75,7 +75,6 @@ public class VoteService {
 
         return 0;
 
-
     }
 
     public List<Vote> getVoteByGameId (Integer gameId) {

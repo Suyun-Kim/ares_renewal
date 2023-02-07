@@ -1,5 +1,6 @@
 spring:
   jpa:
+    database-platform: org.hibernate.spatial.dialect.mariadb.MariaDB103SpatialDialect
     show-sql: true
     database: mysql
     hibernate:
@@ -12,7 +13,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://darecaga.cafe24.com:3306/darecaga?characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://darecaga.cafe24.com:3306/darecaga?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: darecaga
     password: aresteam!
     jwt:
@@ -23,12 +24,14 @@ spring:
         one-indexed-parameters: true
 
 logging:
+  config: classpath:logback-spring.xml
+  org:
+    hibernate:
+      type:
+        descriptor:
+          sql: trace
   level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+    root: info
 
 server:
   port: 8081

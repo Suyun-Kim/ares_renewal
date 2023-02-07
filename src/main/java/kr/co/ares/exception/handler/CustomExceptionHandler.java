@@ -5,6 +5,7 @@ import kr.co.ares.exception.ResourceNotFoundException;
 import kr.co.ares.exception.obj.ResponseEnvelop;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ import kr.co.ares.exception.obj.Error;
 
 import java.util.List;
 
-@Log4j2
+@Slf4j
 @RestControllerAdvice
 public class CustomExceptionHandler {
 

@@ -1,6 +1,7 @@
 package kr.co.ares.domain;
 
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.sql.Time;

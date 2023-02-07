@@ -5,6 +5,7 @@ import kr.co.ares.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ import java.util.Base64;
 import java.util.Date;
 
 
-@Log4j2
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
