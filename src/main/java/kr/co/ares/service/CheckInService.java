@@ -24,6 +24,13 @@ public class CheckInService {
 
     public int insertCheckIn (CheckInDTO checkInDTO) {
 
+        CheckIn isChecked =
+                checkInRepository.findByGameIdxAndMemberIdx(checkInDTO.getGameId(), checkInDTO.getMemberId());
+
+        if (isChecked != null) {
+            return 20;
+        }
+
         Instant instant = new Timestamp(System.currentTimeMillis()).toInstant();
         ZoneOffset offset = ZoneOffset.ofHours(9);
         OffsetDateTime date = instant.atOffset(offset);

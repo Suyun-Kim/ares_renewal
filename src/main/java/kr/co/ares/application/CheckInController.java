@@ -27,6 +27,10 @@ public class CheckInController {
 
         int result = checkInService.insertCheckIn(req);
 
+        if (result == 20) {
+
+        }
+
 
         return new ResponseEntity<>(new Response<>(StatusEnum.OK, true), HttpStatus.OK);
     }
