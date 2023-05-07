@@ -15,7 +15,7 @@ public class VoteDTO {
     private Integer gameIdx;
 
     @NotNull(message = "게임아이디는 필수 입니다")
-    private Integer memberIdx;
+    private String memberId;
 
     @NotNull(message = "투표 여부는 필수 입니다.")
     private Boolean isVote;

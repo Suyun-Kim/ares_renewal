@@ -14,13 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -29,30 +27,30 @@ public class VoteController {
 
     private final VoteService voteService;
 
-    @GetMapping("/votes")
-    public ResponseEntity getVoteList(Pageable pageable) {
+    @PostMapping("/votes:schedule")
+    public ResponseEntity<?> addVoteCurrentSchedule (@RequestBody @Valid VoteDTO voteDTO) {
 
-        Page<Vote> votes = voteService.findAll(pageable);
+        Integer result = voteService.addCurrentGameVote(voteDTO);
 
-        return new ResponseEntity(new Response<>(StatusEnum.OK, true, votes), HttpStatus.OK);
+        return new ResponseEntity(new Response<>(StatusEnum.OK, true, result), HttpStatus.CREATED);
+
     }
 
-    @PostMapping("/votes")
-    public ResponseEntity<?> addVoteMember(@RequestBody @Valid VoteDTO voteDTO) {
+    @GetMapping(value = "/votes/list")
+    public ResponseEntity<?> getCurrentScheduleVoteList () {
 
-        Integer result;
+        Map<String, Object> result = voteService.getCurrentScheduleVoteList();
 
-        if (voteDTO.getIsVote()) {
-            result = voteService.addVoteMember(voteDTO);
-        } else {
-            result = voteService.addNotVoteMember(voteDTO);
-        }
-
-        if (result == 20) {
-            throw new BadRequestException("이미 투표를 완료 했습니다.");
-        }
-
-        return new ResponseEntity<>(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
+        return new ResponseEntity(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/votes/count")
+    public ResponseEntity<?> getCurrentVoteCount() {
+
+        Map<String, Object> result = voteService.getCurrentScheduleVoteCount();
+        return new ResponseEntity(new Response<>(StatusEnum.OK, true, result), HttpStatus.OK);
+    }
+
+
 
 }
